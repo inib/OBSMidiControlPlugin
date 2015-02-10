@@ -9,11 +9,10 @@ namespace OBSMidiControl.MidiControl.Devices
     public interface IDevice
     {  
         string Name { get; }
-        bool IsConnected { get; }
-        //Dictionary<OBSControls, Midi.Control> CCMap();
+        bool IsConnected { get; }        
 
         event ControlChangedEventHandler ControlChanged;        
-        void SetControl(OBSControls control);
+        void SetControl(OBSControl control);
         void SetAll(Presets.Preset preset);
         void Dispose();
     }

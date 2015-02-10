@@ -31,7 +31,19 @@ namespace OBSMidiControl
         {
             device.Dispose();
             base.UnloadPlugin();
-        } 
+        }
+
+        public override void OnDesktopVolumeChanged(float level, bool muted, bool finalValue)
+        {
+            if (muted)
+            {
+                device.SetControl(new OBSControl(OBSControls.MuteDesktop, 01, "test"));
+            }
+            else
+            {
+                device.SetControl(new OBSControl(OBSControls.MuteDesktop, 00, "test"));
+            }
+        }
         #endregion
 
         #region internal

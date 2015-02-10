@@ -45,9 +45,10 @@ namespace OBSMidiControl.MidiControl.Devices
 
         public event ControlChangedEventHandler ControlChanged;
 
-        public void SetControl(OBSControls control)
+        public void SetControl(OBSControl control)
         {
-            throw new NotImplementedException();
+            var list = CCMapper(control);
+            sendCCList(list);
         }
 
         public void SetAll(Presets.Preset preset)
@@ -77,5 +78,69 @@ namespace OBSMidiControl.MidiControl.Devices
                 }
             }
         }
+
+        public void SetControl(OBSControls control)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void sendCCList(List<MidiMsg> list)
+        {
+            if (oDev.IsOpen)
+            {
+                foreach (var item in list)
+                {
+                    oDev.SendControlChange(item.Channel, item.Control, item.Value);
+                }
+            }
+        }
+
+        private List<MidiMsg> CCMapper(OBSControl control)
+        {
+            var list = new List<MidiMsg>();
+            if (control.Control == OBSControls.ChangeScene)
+            {
+                int scene = ((int)control.Value / 10) + 64;
+                if (((int)control.Value % 10) == 0)
+                {
+                    list.Add(new MidiMsg(_chan, (Control)scene, 0));                    
+                }
+                else
+                {
+                    list.Add(new MidiMsg(_chan, (Control)scene, 127));                    
+                }
+            }
+            else if (control.Control == OBSControls.MuteDesktop)
+            {
+                int chan = ((int)control.Value / 10) + 48;                
+                if (((int)control.Value % 10) == 0)
+                {
+                    list.Add(new MidiMsg(_chan, (Control)chan, 0));
+                    list.Add(new MidiMsg(_chan, Control.Mute8, 0));
+                }
+                else
+                {
+                    list.Add(new MidiMsg(_chan, (Control)chan, 127));
+                    list.Add(new MidiMsg(_chan, Control.Mute8, 127));
+                }
+            }
+            else if (control.Control == OBSControls.MuteMic)
+            {
+                int chan = ((int)control.Value / 10) + 32;
+                if (((int)control.Value % 10) == 0)
+                {
+                    list.Add(new MidiMsg(_chan, (Control)chan, 0));
+                    list.Add(new MidiMsg(_chan, Control.Mute7, 0));
+                }
+                else
+                {
+                    list.Add(new MidiMsg(_chan, (Control)chan, 127));
+                    list.Add(new MidiMsg(_chan, Control.Mute7, 127));
+                }
+            }
+            return list;
+        }
+
     }
+
 }

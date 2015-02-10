@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="MidiControl\ControlChangedEvent.cs" />
     <Compile Include="MidiControl\Devices\DeviceSelector.cs" />
+    <Compile Include="MidiControl\Devices\MidiMsg.cs" />
     <Compile Include="MidiControl\Devices\NanoKontrol2.cs" />
     <Compile Include="MidiControl\Devices\IDevice.cs" />
     <Compile Include="MidiControl\Devices\KnownDevices.cs" />
