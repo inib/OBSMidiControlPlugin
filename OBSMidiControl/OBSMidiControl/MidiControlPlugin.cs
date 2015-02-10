@@ -9,6 +9,7 @@ namespace OBSMidiControl
 {
     public class MidiControlPlugin : AbstractPlugin
     {
+        MidiControl.Devices.IDevice device;
         public MidiControlPlugin()
         {
             Name = "Midi Control";
@@ -22,11 +23,13 @@ namespace OBSMidiControl
         public override bool LoadPlugin()
         {
             API.Instance.AddSettingsPane(new PluginSettings());
+            device = new MidiControl.Devices.NanoKONTROL2();
             return true;
         }
 
         public override void UnloadPlugin()
         {
+            device.Dispose();
             base.UnloadPlugin();
         } 
         #endregion

@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OBSMidiControl.MidiControl
+namespace OBSMidiControl.MidiControl.Devices
 {
-    //public delegate void ControlChangedEventHandler(ControlChangedEventArgs e);
-
-    interface IDevice
+    public interface IDevice
     {  
         string Name { get; }
         bool IsConnected { get; }
+        //Dictionary<OBSControls, Midi.Control> CCMap();
 
-        //event ControlChangedEvent ControlChanged;
-        //void SetRawControl(Midi.Control control, int value);
+        event ControlChangedEventHandler ControlChanged;        
         void SetControl(OBSControls control);
         void SetAll(Presets.Preset preset);
         void Dispose();

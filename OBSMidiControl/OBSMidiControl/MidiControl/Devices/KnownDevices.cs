@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OBSMidiControl.MidiControl
+namespace OBSMidiControl.MidiControl.Devices
 {
-    class DeviceSelector
+    public enum KnownDevices
     {
+        nanoKONTROL2,
     }
 }

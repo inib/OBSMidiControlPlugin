@@ -58,6 +58,9 @@
       <HintPath>..\..\..\CLRHostPlus\CLRHostInterop\Win32\Release\CLRHost.Interop.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Midi">
+      <HintPath>..\..\..\Midi\Midi\bin\Debug\Midi.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -71,11 +74,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MidiControl\ControlChangedEventArgs.cs" />
-    <Compile Include="MidiControl\DeviceSelector.cs" />
+    <Compile Include="MidiControl\ControlChangedEvent.cs" />
+    <Compile Include="MidiControl\Devices\DeviceSelector.cs" />
     <Compile Include="MidiControl\Devices\NanoKontrol2.cs" />
-    <Compile Include="MidiControl\IDevice.cs" />
-    <Compile Include="MidiControl\KnownDevices.cs" />
+    <Compile Include="MidiControl\Devices\IDevice.cs" />
+    <Compile Include="MidiControl\Devices\KnownDevices.cs" />
     <Compile Include="MidiControl\OBSControls.cs" />
     <Compile Include="MidiControlPlugin.cs" />
     <Compile Include="PluginSettings.cs" />

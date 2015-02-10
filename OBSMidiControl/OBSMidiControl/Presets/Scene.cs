@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OBSMidiControl.Presets
 {
-    class Scene
+    public class Scene
     {
     }
 }

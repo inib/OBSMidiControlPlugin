@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OBSMidiControl.MidiControl
 {
-    class ControlChangedEventArgs : EventArgs
+    public delegate void ControlChangedEventHandler(ControlChangedEventArgs e);
+
+    public class ControlChangedEventArgs : EventArgs
     {
         public ControlChangedEventArgs(OBSControls control, float value, string name)
         {
@@ -34,10 +36,6 @@ namespace OBSMidiControl.MidiControl
         public float Val
         {
             get { return _val; }
-        }
-        
-        
-
-
+        }  
     }
 }
