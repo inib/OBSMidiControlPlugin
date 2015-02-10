@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace OBSMidiControl.MidiControl
 {
-    public delegate void ControlChangedEventHandler(ControlChangedEventArgs e);
+    //public delegate void ControlChangedEventHandler(ControlChangedEventArgs e);
 
     interface IDevice
     {  
         string Name { get; }
         bool IsConnected { get; }
 
-        event ControlChangedEventHandler ControlChanged;
-        void SetRawControl(Midi.Control control, int value);
-        void SetControl(OBSControl control, )
+        //event ControlChangedEvent ControlChanged;
+        //void SetRawControl(Midi.Control control, int value);
+        void SetControl(OBSControls control);
         void SetAll(Presets.Preset preset);
         void Dispose();
     }

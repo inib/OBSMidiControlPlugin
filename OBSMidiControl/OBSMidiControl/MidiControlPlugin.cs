@@ -7,9 +7,9 @@ using CLROBS;
 
 namespace OBSMidiControl
 {
-    public class Plugin : AbstractPlugin
+    public class MidiControlPlugin : AbstractPlugin
     {
-        public Plugin()
+        public MidiControlPlugin()
         {
             Name = "Midi Control";
             Description = "Control OBS with Midi Power";
@@ -21,12 +21,13 @@ namespace OBSMidiControl
         #region OBSCallbacks
         public override bool LoadPlugin()
         {
+            API.Instance.AddSettingsPane(new PluginSettings());
             return true;
         }
 
         public override void UnloadPlugin()
         {
-
+            base.UnloadPlugin();
         } 
         #endregion
 

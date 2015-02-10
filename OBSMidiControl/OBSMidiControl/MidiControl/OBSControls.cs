@@ -15,13 +15,13 @@ namespace OBSMidiControl
         ChangeScene,
     }
 
-    public class Control
-    {
-        public Control(OBSControls control, float value, string name)
-        {
+    //public class Control
+    //{
+    //    public Control(OBSControls control, float value, string name)
+    //    {
 
-        }
+    //    }
 
-        public int MyProperty { get; private set; }
-    }
+    //    public int MyProperty { get; private set; }
+    //}
 }
