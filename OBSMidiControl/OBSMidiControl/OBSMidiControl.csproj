@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CLRHost.Interop">
-      <HintPath>..\..\..\CLRHostPlus\CLRHostInterop\Win32\Release\CLRHost.Interop.dll</HintPath>
+      <HintPath>..\..\..\GitHub\CLRHostPlus\CLRHostInterop\Win32\Release\CLRHost.Interop.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,7 +69,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)\$(TargetFileName) $(SolutionDir)..\OBS\rundir\plugins\CLRHostPlugin\</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..\OBS\rundir\plugins\CLRHostPlugin\
+$(ProjectDir)..\OBS\rundir\OBS.exe</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
