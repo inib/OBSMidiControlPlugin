@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OBSMidiControl.Midi
+namespace OBSMidiControl.MidiControl.Devices
 {
-    class DeviceSelector
+    class NanoKontrol2
     {
     }
 }
