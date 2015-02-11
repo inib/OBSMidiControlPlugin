@@ -134,7 +134,10 @@ namespace OBSMidiControl.MidiControl.Devices
             var _msg = CCMapperIn(new MidiMsg(_chan, msg.Control, msg.Value));
             if (_msg != null)
             {
-                ControlChanged(new ControlChangedEventArgs(_msg));
+                if (ControlChanged != null)
+                {
+                    ControlChanged(this, new ControlChangedEventArgs(_msg));
+                }                
             }
             
         }

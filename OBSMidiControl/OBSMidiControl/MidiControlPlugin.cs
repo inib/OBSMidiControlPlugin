@@ -32,6 +32,37 @@ namespace OBSMidiControl
             bridge.Dispose();
             base.UnloadPlugin();
         }
+
+        public override void OnDesktopVolumeChanged(float level, bool muted, bool finalValue)
+        {
+            bridge.SetVolume(new OBSControl(OBSControls.ChangeVolumeDesktop, level, "Master"));
+            if (muted)
+            {
+                bridge.SetVolume(new OBSControl(OBSControls.MuteDesktop, 1, "Master"));
+            }
+            else 
+            {
+                bridge.SetVolume(new OBSControl(OBSControls.MuteDesktop, 0, "Master"));
+            }
+        }
+
+        public override void OnMicVolumeChanged(float level, bool muted, bool finalValue)
+        {
+            bridge.SetVolume(new OBSControl(OBSControls.ChangeVolumeMic, level, "Master"));
+            if (muted)
+            {
+                bridge.SetVolume(new OBSControl(OBSControls.MuteMic, 1, "Master"));
+            }
+            else
+            {
+                bridge.SetVolume(new OBSControl(OBSControls.MuteMic, 0, "Master"));
+            }
+        }
+
+        public override void OnSceneSwitch(string scene)
+        {
+            bridge.SetCurrentScene(scene);
+        }
         #endregion
 
         #region internal

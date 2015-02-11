@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OBSMidiControl.MidiControl
 {
-    public delegate void ControlChangedEventHandler(ControlChangedEventArgs e);
+    public delegate void ControlChangedEventHandler(Devices.IDevice d, ControlChangedEventArgs e);
 
     public class ControlChangedEventArgs : EventArgs
     {
