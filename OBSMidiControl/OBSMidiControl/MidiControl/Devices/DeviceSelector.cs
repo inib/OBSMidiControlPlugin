@@ -8,33 +8,23 @@ namespace OBSMidiControl.MidiControl.Devices
 {
     public static class DeviceSelector
     {
-        //private MidiDevice _device;
+        public static IDevice GetDevice(Devices.KnownDevices device)
+        {   
+            if (CheckDevice(device) && device.ToString() == "nanoKONTROL2")
+            {
+                return new NanoKONTROL2();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-        //private bool _deviceFound = false;
-
-        //public MidiDevice GetDevice()
-        //{
-        //    if (_deviceFound)
-        //    {
-        //        return _device;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-            
-        //}
-
-        //public bool CheckDevice(Devices.KnownDevices device)
-        //{
-        //    if (true)
-        //    {
-        //        Midi.InputDevice input = Midi.InputDevice.InstalledDevices.First(a => a.Name == device.ToString());
-        //        Midi.OutputDevice output = Midi.OutputDevice.InstalledDevices.First(a => a.Name == device.ToString());
-        //        _deviceFound = true;
-        //    }
-        //    return _deviceFound;
-        //}
+        public static bool CheckDevice(Devices.KnownDevices device)
+        {
+            bool check = (Midi.InputDevice.InstalledDevices.Any(a => a.Name == device.ToString())) && (Midi.OutputDevice.InstalledDevices.Any(a => a.Name == device.ToString()));
+            return check;
+        }
 
         // Preparation future multidevice support
 

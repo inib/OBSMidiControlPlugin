@@ -54,8 +54,45 @@ namespace OBSMidiControl.MidiControl.Devices
         }
 
         public void SetAll(Presets.Preset preset)
-        {
-            throw new NotImplementedException();
+        {            
+            for (int i = 0; i < preset.SceneArray.Length; i++)
+            {
+                if (preset.SceneArray[i].DeskIsMuted)
+                {
+                    oDev.SendControlChange(_chan, Control.Solo1 + i, 127);
+                }
+                else
+                {
+                    oDev.SendControlChange(_chan, Control.Solo1 + i, 0);
+                }
+
+                if (preset.SceneArray[i].DeskIsMuted)
+                {
+                    oDev.SendControlChange(_chan, Control.Mute1 + i, 127);
+                }
+                else
+                {
+                    oDev.SendControlChange(_chan, Control.Mute1 + i, 0);
+                }
+                oDev.SendControlChange(_chan, Control.Rec1 + i, 0);
+            }            
+            if (preset.Master.DeskIsMuted)
+            {
+                oDev.SendControlChange(_chan, Control.Mute8, 127);
+            }
+            else
+            {
+                oDev.SendControlChange(_chan, Control.Mute8, 0);
+            }
+
+            if (preset.Master.MicIsMuted)
+            {
+                oDev.SendControlChange(_chan, Control.Mute7, 127);
+            }
+            else
+            {
+                oDev.SendControlChange(_chan, Control.Mute7, 0);
+            }           
         }
 
         public void Dispose()
@@ -81,11 +118,6 @@ namespace OBSMidiControl.MidiControl.Devices
             }
         }
 
-        public void SetControl(OBSControls control)
-        {
-            throw new NotImplementedException();
-        }
-
         private void sendCCList(List<MidiMsg> list)
         {
             if (oDev.IsOpen)
@@ -100,7 +132,11 @@ namespace OBSMidiControl.MidiControl.Devices
         public void Receive(Midi.ControlChangeMessage msg)
         {
             var _msg = CCMapperIn(new MidiMsg(_chan, msg.Control, msg.Value));
-            ControlChanged(new ControlChangedEventArgs(_msg));
+            if (_msg != null)
+            {
+                ControlChanged(new ControlChangedEventArgs(_msg));
+            }
+            
         }
 
         public OBSControl CCMapperIn(MidiMsg msg)
@@ -188,7 +224,7 @@ namespace OBSMidiControl.MidiControl.Devices
             get { return 5; }
         }
 
-        public int ScenesAivailable
+        public int ScenesAvailable
         {
             get { return 6; }
         }

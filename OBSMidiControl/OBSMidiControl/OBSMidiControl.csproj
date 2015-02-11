@@ -82,6 +82,7 @@
     <Compile Include="MidiControl\Devices\KnownDevices.cs" />
     <Compile Include="MidiControl\OBSControls.cs" />
     <Compile Include="MidiControlPlugin.cs" />
+    <Compile Include="MidiControl\OBSMidiBridge.cs" />
     <Compile Include="PluginSettings.cs" />
     <Compile Include="Presets\Master.cs" />
     <Compile Include="Presets\Preset.cs" />

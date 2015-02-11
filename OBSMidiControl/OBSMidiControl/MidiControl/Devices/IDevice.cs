@@ -11,7 +11,7 @@ namespace OBSMidiControl.MidiControl.Devices
         string Name { get; }
         bool IsConnected { get; }
         int PresetsAvailable { get; }
-        int ScenesAivailable { get; }
+        int ScenesAvailable { get; }
         bool HasMaster { get; }
         string PresetXML { get; }
 

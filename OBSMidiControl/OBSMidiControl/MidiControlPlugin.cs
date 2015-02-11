@@ -9,7 +9,7 @@ namespace OBSMidiControl
 {
     public class MidiControlPlugin : AbstractPlugin
     {
-        MidiControl.Devices.IDevice device;
+        private MidiControl.OBSMidiBridge bridge;
         public MidiControlPlugin()
         {
             Name = "Midi Control";
@@ -23,37 +23,14 @@ namespace OBSMidiControl
         public override bool LoadPlugin()
         {
             API.Instance.AddSettingsPane(new PluginSettings());
-            device = new MidiControl.Devices.NanoKONTROL2();
-            if (device.IsConnected)
-            {
-                device.ControlChanged += new MidiControl.ControlChangedEventHandler(test);
-            }
+            bridge = new MidiControl.OBSMidiBridge(MidiControl.Devices.KnownDevices.nanoKONTROL2);
             return true;
-        }
-
-        public void test(MidiControl.ControlChangedEventArgs e)
-        {
-            int chan = (int)(e.Control.Value/10);
-            bool toggle = ((e.Control.Value % 10) == 0); 
-            API.Instance.Log("MIDI: " + e.Control.Name + " Control: " + e.Control.Control.ToString() + "Value: " + e.Control.Value + "=> Toogle :" + toggle);           
-        }
+        } 
 
         public override void UnloadPlugin()
         {
-            device.Dispose();
+            bridge.Dispose();
             base.UnloadPlugin();
-        }
-
-        public override void OnDesktopVolumeChanged(float level, bool muted, bool finalValue)
-        {
-            if (muted)
-            {
-                device.SetControl(new OBSControl(OBSControls.MuteDesktop, 01, "test"));
-            }
-            else
-            {
-                device.SetControl(new OBSControl(OBSControls.MuteDesktop, 00, "test"));
-            }
         }
         #endregion
 
