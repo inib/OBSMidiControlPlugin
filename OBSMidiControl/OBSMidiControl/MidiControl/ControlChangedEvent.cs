@@ -10,32 +10,17 @@ namespace OBSMidiControl.MidiControl
 
     public class ControlChangedEventArgs : EventArgs
     {
-        public ControlChangedEventArgs(OBSControls control, float value, string name)
+        public ControlChangedEventArgs(OBSControl control)
         {
             _control = control;
-            _val = value;
-            _name = name;
         }
 
-        private OBSControls _control;
+        private OBSControl _control;
 
-        public OBSControls Control
+        public OBSControl Control
         {
             get { return _control; }
         }
 
-        private string _name;
-
-        public string Name
-        {
-            get { return _name; }  
-        }
-
-        private float _val;
-
-        public float Val
-        {
-            get { return _val; }
-        }  
     }
 }

@@ -24,7 +24,18 @@ namespace OBSMidiControl
         {
             API.Instance.AddSettingsPane(new PluginSettings());
             device = new MidiControl.Devices.NanoKONTROL2();
+            if (device.IsConnected)
+            {
+                device.ControlChanged += new MidiControl.ControlChangedEventHandler(test);
+            }
             return true;
+        }
+
+        public void test(MidiControl.ControlChangedEventArgs e)
+        {
+            int chan = (int)(e.Control.Value/10);
+            bool toggle = ((e.Control.Value % 10) == 0); 
+            API.Instance.Log("MIDI: " + e.Control.Name + " Control: " + e.Control.Control.ToString() + "Value: " + e.Control.Value + "=> Toogle :" + toggle);           
         }
 
         public override void UnloadPlugin()

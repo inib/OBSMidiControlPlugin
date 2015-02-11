@@ -9,7 +9,11 @@ namespace OBSMidiControl.MidiControl.Devices
     public interface IDevice
     {  
         string Name { get; }
-        bool IsConnected { get; }        
+        bool IsConnected { get; }
+        int PresetsAvailable { get; }
+        int ScenesAivailable { get; }
+        bool HasMaster { get; }
+        string PresetXML { get; }
 
         event ControlChangedEventHandler ControlChanged;        
         void SetControl(OBSControl control);

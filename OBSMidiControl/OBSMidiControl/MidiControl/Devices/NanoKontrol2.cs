@@ -26,7 +26,9 @@ namespace OBSMidiControl.MidiControl.Devices
 
             iDev.Open();
             oDev.Open();
-            oDev.SendControlChange(_chan,Control.Rec,127);            
+            oDev.SendControlChange(_chan,Control.Rec,127);
+            iDev.ControlChange += new InputDevice.ControlChangeHandler(Receive);
+            iDev.StartReceiving(null);
         }
 
         public string Name
@@ -47,7 +49,7 @@ namespace OBSMidiControl.MidiControl.Devices
 
         public void SetControl(OBSControl control)
         {
-            var list = CCMapper(control);
+            var list = CCMapperOut(control);
             sendCCList(list);
         }
 
@@ -95,7 +97,45 @@ namespace OBSMidiControl.MidiControl.Devices
             }
         }
 
-        private List<MidiMsg> CCMapper(OBSControl control)
+        public void Receive(Midi.ControlChangeMessage msg)
+        {
+            var _msg = CCMapperIn(new MidiMsg(_chan, msg.Control, msg.Value));
+            ControlChanged(new ControlChangedEventArgs(_msg));
+        }
+
+        public OBSControl CCMapperIn(MidiMsg msg)
+        {
+            if ((int)msg.Control <= 7)
+            {
+                float value = ((((int)msg.Control+1)*10)+((float)msg.Value/127.0f)); 
+                return (new OBSControl(OBSControls.ChangeVolumeDesktop, value, "nanoKONTROL2"));
+            }
+            else if ((int)msg.Control <= 23)
+            {
+                float value = ((((int)msg.Control-15) * 10) + ((float)msg.Value / 127.0f));
+                return (new OBSControl(OBSControls.ChangeVolumeMic, value, "nanoKONTROL2"));
+            }
+            else if ((int)msg.Control <= 39)
+            {
+                float value = ((((int)msg.Control-31) * 10) + ((float)msg.Value / 127.0f));
+                return (new OBSControl(OBSControls.MuteDesktop, value, "nanoKONTROL2"));
+            }
+            else if ((48 <= (int)msg.Control) && ((int)msg.Control) <= 55)
+            {
+                float value = ((((int)msg.Control-47) * 10) + ((float)msg.Value / 127.0f));
+                return (new OBSControl(OBSControls.MuteMic, value, "nanoKONTROL2"));
+            }
+            else if ((64 <= (int)msg.Control) && ((int)msg.Control) <= 71)
+            {
+                float value = ((((int)msg.Control-63) * 10) + ((float)msg.Value / 127.0f));
+                return (new OBSControl(OBSControls.ChangeScene, value, "nanoKONTROL2"));
+            }
+            else {
+                return null;
+            }
+        }
+
+        private List<MidiMsg> CCMapperOut(OBSControl control)
         {
             var list = new List<MidiMsg>();
             if (control.Control == OBSControls.ChangeScene)
@@ -141,6 +181,27 @@ namespace OBSMidiControl.MidiControl.Devices
             return list;
         }
 
+
+
+        public int PresetsAvailable
+        {
+            get { return 5; }
+        }
+
+        public int ScenesAivailable
+        {
+            get { return 6; }
+        }
+
+        public bool HasMaster
+        {
+            get { return true; }
+        }
+
+        public string PresetXML
+        {
+            get { return "nanoKONTROL.xml"; }
+        }
     }
 
 }
