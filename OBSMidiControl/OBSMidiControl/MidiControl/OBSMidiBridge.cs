@@ -37,13 +37,14 @@ namespace OBSMidiControl.MidiControl
                 _currentPreset.SceneArray[i].Name = "Scene" + i;
             }
             //
+            _currentPreset.Master.DeskIsMuted = CLROBS.API.Instance.GetDesktopMuted();
+            _currentPreset.Master.MicIsMuted = CLROBS.API.Instance.GetMicMuted();          
+
             _device.SetAll(_currentPreset);                      
-        }
+        }        
 
         public void SetVolume(OBSControl control)
         {
-            // Input OBS
-
             // Output MIDI
             bool master;
             if (control.Control == OBSControls.ChangeVolumeDesktop)
@@ -55,10 +56,25 @@ namespace OBSMidiControl.MidiControl
                 if (chan == 7)
                 {
                     _currentPreset.Master.DeskVol = vol;
+                    CLROBS.API.Instance.Log("SetVolume::VolumeDesktop::MasterVolSet: " + vol);
+                    if (!_currentScene.DeskIsMuted && !_currentPreset.Master.DeskIsMuted)
+                    {
+                        CLROBS.API.Instance.SetDesktopVolume(_currentScene.DeskVol * _currentPreset.Master.DeskVol, true);
+                        CLROBS.API.Instance.Log("SetVolume::VolumeDesktop->OBSVolSet: " + vol);
+                    }
                 }
                 if (chan < _device.ScenesAvailable)
                 {
-                    _currentPreset.SceneArray[chan].DeskVol = vol;
+                    if (_currentPreset.SceneArray[chan].DeskVol != vol)
+                    {
+                        _currentPreset.SceneArray[chan].DeskVol = vol;
+                        CLROBS.API.Instance.Log("SetVolume::VolumeDesktop::SceneVolSet: " + vol);
+                        if (_currentPreset.SceneArray[chan].Name == _currentScene.Name && !_currentScene.DeskIsMuted && !_currentPreset.Master.DeskIsMuted)
+                        {
+                            CLROBS.API.Instance.SetDesktopVolume(_currentScene.DeskVol * _currentPreset.Master.DeskVol, true);
+                            CLROBS.API.Instance.Log("SetVolume::VolumeDesktop->OBSVolSet: " + vol);
+                        }
+                    }
                 }
             }
 
@@ -71,10 +87,25 @@ namespace OBSMidiControl.MidiControl
                 if (chan == 6)
                 {
                     _currentPreset.Master.MicVol = vol;
+                    CLROBS.API.Instance.Log("SetVolume::VolumeMic::MasterVolSet: " + vol);
+                    if (!_currentScene.MicIsMuted && !_currentPreset.Master.MicIsMuted)
+                    {
+                        CLROBS.API.Instance.SetMicVolume(_currentScene.MicVol * _currentPreset.Master.MicVol, true);
+                        CLROBS.API.Instance.Log("SetVolume::VolumeMic->OBSVolSet: " + vol);
+                    }
                 }
                 if (chan < _device.ScenesAvailable)
                 {
-                    _currentPreset.SceneArray[chan].MicVol = vol;
+                    if (_currentPreset.SceneArray[chan].MicVol != vol)
+                    {
+                        _currentPreset.SceneArray[chan].MicVol = vol;
+                        CLROBS.API.Instance.Log("SetVolume::VolumeMic::SceneVolSet: " + vol);
+                        if (_currentPreset.SceneArray[chan].Name == _currentScene.Name && !_currentScene.MicIsMuted && !_currentPreset.Master.MicIsMuted)
+                        {
+                            CLROBS.API.Instance.SetMicVolume(_currentScene.MicVol * _currentPreset.Master.MicVol, true);
+                            CLROBS.API.Instance.Log("SetVolume::VolumeMic->OBSVolSet: " + vol);
+                        }
+                    }
                 }
             }
 
@@ -88,13 +119,21 @@ namespace OBSMidiControl.MidiControl
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteDesktop::Master: true");
                         _currentPreset.Master.DeskIsMuted = false;
-                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * 8) + 1, ""));
+                        if (CLROBS.API.Instance.GetDesktopMuted() && !_currentScene.DeskIsMuted)
+                        {
+                            CLROBS.API.Instance.SetDesktopVolume(_currentPreset.Master.DeskVol * _currentScene.DeskVol, true);
+                        } 
+                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * 7), ""));
                     }
                     else
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteDesktop::Master: false");
                         _currentPreset.Master.DeskIsMuted = true;
-                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * 8), ""));
+                        if (!CLROBS.API.Instance.GetDesktopMuted())
+                        {
+                            CLROBS.API.Instance.ToggleDesktopMute();
+                        }                         
+                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * 7) + 1, ""));
                     }                    
                 }
                 else if (chan < _device.ScenesAvailable)
@@ -103,13 +142,21 @@ namespace OBSMidiControl.MidiControl
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteDesktop::Scene: true");
                         _currentPreset.SceneArray[chan].DeskIsMuted = false;
-                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * chan) + 1, ""));
+                        if (CLROBS.API.Instance.GetDesktopMuted() && !_currentScene.DeskIsMuted && !_currentPreset.Master.DeskIsMuted)
+                        {
+                            CLROBS.API.Instance.SetDesktopVolume(_currentPreset.Master.DeskVol * _currentScene.DeskVol,true);
+                        }                        
+                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * chan), ""));
                     }
                     else
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteDesktop::Scene: false");
                         _currentPreset.SceneArray[chan].DeskIsMuted = true;
-                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * chan), ""));                        
+                        if (_currentScene.DeskIsMuted && !CLROBS.API.Instance.GetDesktopMuted())
+                        {
+                            CLROBS.API.Instance.ToggleDesktopMute();
+                        } 
+                        _device.SetControl(new OBSControl(OBSControls.MuteDesktop, (10 * chan) + 1, ""));                        
                     }                    
                 }
             }
@@ -122,14 +169,16 @@ namespace OBSMidiControl.MidiControl
                     if (_currentPreset.Master.MicIsMuted)
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteMic::Master: true");
-                        _currentPreset.Master.DeskIsMuted = false;
-                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * 7) + 1, ""));
+                        CLROBS.API.Instance.ToggleMicMute();
+                        _currentPreset.Master.MicIsMuted = false;
+                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * 6), ""));
                     }
                     else
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteMic::Master: false");
-                        _currentPreset.Master.DeskIsMuted = true;
-                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * 7), ""));
+                        CLROBS.API.Instance.ToggleMicMute();
+                        _currentPreset.Master.MicIsMuted = true;
+                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * 6) + 1, ""));
                     }
                 }
                 else if (chan < _device.ScenesAvailable)
@@ -137,14 +186,16 @@ namespace OBSMidiControl.MidiControl
                     if (_currentPreset.SceneArray[chan].MicIsMuted)
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteMic::Scene: true");
+                        CLROBS.API.Instance.ToggleMicMute();
                         _currentPreset.SceneArray[chan].MicIsMuted = false;
-                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * chan) + 1, ""));
+                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * chan), ""));
                     }
                     else
                     {
                         CLROBS.API.Instance.Log("SetVolume::MuteMic::Scene: false");
+                        CLROBS.API.Instance.ToggleMicMute();
                         _currentPreset.SceneArray[chan].MicIsMuted = true;
-                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * chan), ""));
+                        _device.SetControl(new OBSControl(OBSControls.MuteMic, (10 * chan) + 1, ""));
                     }
                 }
             }

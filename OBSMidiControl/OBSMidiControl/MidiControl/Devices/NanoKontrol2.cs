@@ -26,6 +26,10 @@ namespace OBSMidiControl.MidiControl.Devices
 
             iDev.Open();
             oDev.Open();
+            for (int i = 0; i < 128; i++)
+            {
+                oDev.SendControlChange(_chan,(Control)i,0);
+            }
             oDev.SendControlChange(_chan,Control.Rec,127);
             iDev.ControlChange += new InputDevice.ControlChangeHandler(Receive);
             iDev.StartReceiving(null);
@@ -206,7 +210,12 @@ namespace OBSMidiControl.MidiControl.Devices
             }
             else if (control.Control == OBSControls.MuteDesktop)
             {
-                int chan = ((int)control.Value / 10) + 32;                
+                int chan = ((int)control.Value / 10) + 32;
+                if (((int)control.Value / 10) == 7)
+                {
+                    chan = 55;
+                }
+                                
                 if (((int)control.Value % 10) == 0)
                 {
                     list.Add(new MidiMsg(_chan, (Control)chan, 0));
