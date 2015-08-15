@@ -151,42 +151,42 @@ namespace OBSMidiControl.MidiControl.Devices
             if ((int)msg.Control <= 5)
             {
                 float value = ((((int)msg.Control)*10)+((float)msg.Value/127.0f)); 
-                return (new OBSControl(OBSControls.ChangeVolumeDesktop, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.ChangeVolumeDesktop, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if ((int)msg.Control == 6)
             {
-                float value = ((((int)msg.Control)*10)+((float)msg.Value/127.0f)); 
-                return (new OBSControl(OBSControls.ChangeVolumeMic, value, "nanoKONTROL2"));
+                float value = ((((int)msg.Control)*10)+((float)msg.Value/127.0f));
+                return (new OBSControl(BridgeControl.ChangeVolumeMic, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if ((int)msg.Control == 7)
             {
                 float value = ((((int)msg.Control) * 10) + ((float)msg.Value / 127.0f));
-                return (new OBSControl(OBSControls.ChangeVolumeDesktop, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.ChangeVolumeDesktop, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if ((int)msg.Control > 15 && (int)msg.Control <= 21)
             {
                 float value = ((((int)msg.Control-16) * 10) + ((float)msg.Value / 127.0f));
-                return (new OBSControl(OBSControls.ChangeVolumeMic, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.ChangeVolumeMic, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if ((32 <= (int)msg.Control) && (int)msg.Control <= 37 && msg.Value != 0)
             {
                 float value = (((int)msg.Control-32) * 10);
-                return (new OBSControl(OBSControls.MuteDesktop, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if ((48 <= (int)msg.Control) && ((int)msg.Control) <= 54 && msg.Value != 0)
             {
                 float value = (((int)msg.Control-48) * 10);
-                return (new OBSControl(OBSControls.MuteMic, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.MuteMic, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if (((int)msg.Control) == 55 && msg.Value != 0)
             {
                 float value = (((int)msg.Control - 48) * 10);
-                return (new OBSControl(OBSControls.MuteDesktop, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else if ((64 <= (int)msg.Control) && ((int)msg.Control) <= 69 && msg.Value != 0)
             {
                 float value = ((((int)msg.Control-64) * 10) + ((float)msg.Value / 127.0f));
-                return (new OBSControl(OBSControls.ChangeScene, value, "nanoKONTROL2"));
+                return (new OBSControl(BridgeControl.ChangeScene, (int)Midi.Channel.Channel1, value, "nanoKONTROL2"));
             }
             else {
                 return null;
@@ -196,7 +196,7 @@ namespace OBSMidiControl.MidiControl.Devices
         private List<MidiMsg> CCMapperOut(OBSControl control)
         {
             var list = new List<MidiMsg>();
-            if (control.Control == OBSControls.ChangeScene)
+            if (control.Control == BridgeControl.ChangeScene)
             {
                 int scene = ((int)control.Value / 10) + 64;
                 if (((int)control.Value % 10) == 0)
@@ -208,7 +208,7 @@ namespace OBSMidiControl.MidiControl.Devices
                     list.Add(new MidiMsg(_chan, (Control)scene, 127));                    
                 }
             }
-            else if (control.Control == OBSControls.MuteDesktop)
+            else if (control.Control == BridgeControl.MuteDesktop)
             {
                 int chan = ((int)control.Value / 10) + 32;
                 if (((int)control.Value / 10) == 7)
@@ -227,7 +227,7 @@ namespace OBSMidiControl.MidiControl.Devices
                     //list.Add(new MidiMsg(_chan, Control.Mute8, 127));
                 }
             }
-            else if (control.Control == OBSControls.MuteMic)
+            else if (control.Control == BridgeControl.MuteMic)
             {
                 int chan = ((int)control.Value / 10) + 48;
                 if (((int)control.Value % 10) == 0)

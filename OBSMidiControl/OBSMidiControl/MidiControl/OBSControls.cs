@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OBSMidiControl
 {
-    public enum OBSControls
+    public enum BridgeControl
     {
         ChangeVolumeDesktop = 0,
         ChangeVolumeMic,
@@ -17,18 +17,20 @@ namespace OBSMidiControl
 
     public class OBSControl
     {
-        public OBSControl(OBSControls control, float value, string name)
+        public OBSControl(BridgeControl control, int channel, float value, string name)
         {
             _control = control;
+            _channel = channel;
             _value = value;
             _name = name;
         }
 
-        private OBSControls _control;
+        private BridgeControl _control;
 
-        public OBSControls Control
+        public BridgeControl Control
         {
             get { return _control; }
+            set { _control = value; } 
         }
 
         private float _value;
@@ -36,6 +38,7 @@ namespace OBSMidiControl
         public float Value
         {
             get { return _value; }
+            set { _value = value; }
         }
 
         private string _name;
@@ -43,8 +46,16 @@ namespace OBSMidiControl
         public string Name
         {
             get { return _name; }
+            set { _name = value; }
         }
-        
+
+        private int _channel;
+
+        public int Channel
+        {
+            get { return _channel; }
+            set { _channel = value; }
+        }
         
         
     }

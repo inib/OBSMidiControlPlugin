@@ -33,36 +33,36 @@ namespace OBSMidiControl
             base.UnloadPlugin();
         }
 
-        //public override void OnDesktopVolumeChanged(float level, bool muted, bool finalValue)
-        //{
-        //    bridge.SetVolume(new OBSControl(OBSControls.ChangeVolumeDesktop, level, "Master"));
-        //    if (muted)
-        //    {
-        //        bridge.SetVolume(new OBSControl(OBSControls.MuteDesktop, 1, "Master"));
-        //    }
-        //    else 
-        //    {
-        //        bridge.SetVolume(new OBSControl(OBSControls.MuteDesktop, 0, "Master"));
-        //    }
-        //}
+        public override void OnDesktopVolumeChanged(float level, bool muted, bool finalValue)
+        {
+            bridge.MidiSetVolume(new OBSControl(BridgeControl.ChangeVolumeDesktop, (int)Midi.Channel.Channel1, level, "Master"));
+            if (muted)
+            {
+                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, 71, "Master"));
+            }
+            else
+            {
+                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, 70, "Master"));
+            }
+        }
 
-        //public override void OnMicVolumeChanged(float level, bool muted, bool finalValue)
-        //{
-        //    bridge.SetVolume(new OBSControl(OBSControls.ChangeVolumeMic, level, "Master"));
-        //    if (muted)
-        //    {
-        //        bridge.SetVolume(new OBSControl(OBSControls.MuteMic, 1, "Master"));
-        //    }
-        //    else
-        //    {
-        //        bridge.SetVolume(new OBSControl(OBSControls.MuteMic, 0, "Master"));
-        //    }
-        //}
+        public override void OnMicVolumeChanged(float level, bool muted, bool finalValue)
+        {
+            bridge.MidiSetVolume(new OBSControl(BridgeControl.ChangeVolumeMic, (int)Midi.Channel.Channel1, level, "Master"));
+            if (muted)
+            {
+                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteMic, 61, (int)Midi.Channel.Channel1, "Master"));
+            }
+            else
+            {
+                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteMic, 60, (int)Midi.Channel.Channel1, "Master"));
+            }
+        }
 
-        //public override void OnSceneSwitch(string scene)
-        //{
-        //    bridge.SetCurrentScene(scene);
-        //}
+        public override void OnSceneSwitch(string scene)
+        {
+            bridge.SetCurrentScene(scene);
+        }
         #endregion
 
         #region internal
