@@ -25,7 +25,7 @@ namespace OBSMidiControl
             API.Instance.AddSettingsPane(new PluginSettings());
             bridge = new MidiControl.OBSMidiBridge(MidiControl.Devices.KnownDevices.nanoKONTROL2);
             return true;
-        } 
+        }
 
         public override void UnloadPlugin()
         {
@@ -35,27 +35,37 @@ namespace OBSMidiControl
 
         public override void OnDesktopVolumeChanged(float level, bool muted, bool finalValue)
         {
-            bridge.MidiSetVolume(new OBSControl(BridgeControl.ChangeVolumeDesktop, (int)Midi.Channel.Channel1, level, "Master"));
-            if (muted)
+            if (finalValue)
             {
-                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, 71, "Master"));
-            }
-            else
-            {
-                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, 70, "Master"));
+#if DEBUG
+                CLROBS.API.Instance.Log("OBS->Plugin::OnDesktopVolumeChanged Level: " + level.ToString() + " Muted: " + muted.ToString() + " FinalV: " + finalValue.ToString()); 
+#endif
+                if (!muted)
+                {
+                    bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, 70, "Master"));
+                }
+                else if (muted)
+                {
+                    bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteDesktop, (int)Midi.Channel.Channel1, 71, "Master"));
+                }
             }
         }
 
         public override void OnMicVolumeChanged(float level, bool muted, bool finalValue)
         {
-            bridge.MidiSetVolume(new OBSControl(BridgeControl.ChangeVolumeMic, (int)Midi.Channel.Channel1, level, "Master"));
-            if (muted)
+            if (finalValue)
             {
-                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteMic, 61, (int)Midi.Channel.Channel1, "Master"));
-            }
-            else
-            {
-                bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteMic, 60, (int)Midi.Channel.Channel1, "Master"));
+#if DEBUG
+                CLROBS.API.Instance.Log("OBS->Plugin::OnMicVolumeChanged Level: " + level.ToString() + " Muted: " + muted.ToString() + " FinalV: " + finalValue.ToString()); 
+#endif
+                if (!muted)
+                {
+                    bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteMic, (int)Midi.Channel.Channel1, 60, "Master"));
+                }
+                else if (muted)
+                {
+                    bridge.MidiSetVolume(new OBSControl(BridgeControl.MuteMic, (int)Midi.Channel.Channel1, 61, "Master"));
+                }
             }
         }
 
@@ -80,7 +90,7 @@ namespace OBSMidiControl
             byte[] bytes = (byte[])rm.GetObject(dllName);
 
             return System.Reflection.Assembly.Load(bytes);
-        } 
+        }
         #endregion
 
     }
